@@ -4,7 +4,7 @@ A beautifully crafted website for **Kalos Academy**, a Maths & Science tuition s
 
 ## Structure
 
-*   `kalos-academy.html`: The main landing page including details about our teaching philosophy, subjects, tutors, the manifesto, parents' testimonials, and a booking form.
+*   `index.html`: The main landing page including details about our teaching philosophy, subjects, tutors, the manifesto, parents' testimonials, and a booking form.
 *   `workshop.html`: The subpage showcasing self-directed student projects (like the thirteen-month calendar).
 *   `Profile photo.jpeg`: Headshot image of the founder.
 *   `landing page image Kalos website.png`: Illustration/notebook sketch for the calendar project.
@@ -18,11 +18,11 @@ To view the website with all font connections and links working correctly, run a
 python -m http.server 8000
 ```
 Then open your browser and navigate to:
-[http://localhost:8000/kalos-academy.html](http://localhost:8000/kalos-academy.html)
+[http://localhost:8000/index.html](http://localhost:8000/index.html)
 
 ### Node.js (http-server)
 ```bash
 npx http-server -p 8000
 ```
 Then navigate to:
-[http://localhost:8000/kalos-academy.html](http://localhost:8000/kalos-academy.html)
+[http://localhost:8000/index.html](http://localhost:8000/index.html)
