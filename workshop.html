@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<script>document.documentElement.className += ' js';</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Workshop — Student Projects · Kalos Academy</title>
+<meta name="description" content="A gallery of self-directed projects, calendar designs, and invented games created by students at Kalos Academy."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* =============================================
+   TOKENS (Matching kalos-academy.html)
+   ============================================= */
+:root {
+  --paper:       #F5F6F4;
+  --paper-dark:  #ECEEE9;
+  --ink:         #1A2E44;
+  --ink-mid:     #3D5166;
+  --ink-soft:    #6B7D8F;
+  --green:       #2A6049;
+  --green-light: #D6EAE1;
+  --amber:       #B8832A;
+  --amber-light: #F5EDDA;
+  --rule:        #D0D8C8;
+  --rule-blue:   #C8D4DC;
+  --white:       #FFFFFF;
+
+  --f-display: 'Playfair Display', Georgia, serif;
+  --f-body:    'Libre Baskerville', Georgia, serif;
+  --f-hand:    'Caveat', cursive;
+  --f-mono:    'Space Mono', ui-monospace, monospace;
+
+  --max: 1160px;
+  --gap: clamp(18px, 4.5vw, 64px);
+}
+
+/* =============================================
+   RESET & BASE
+   ============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 18px;
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  /* Notebook ruled lines across the whole page */
+  background-image:
+    linear-gradient(transparent calc(2.4rem - 1px), var(--rule) calc(2.4rem - 1px), var(--rule) 2.4rem, transparent 2.4rem);
+  background-size: 100% 2.4rem;
+  background-attachment: local;
+  overflow-x: hidden;
+}
+::selection { background: var(--amber-light); color: var(--ink); }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+figure { margin: 0; }
+
+/* Keyboard Accessibility Focus Styles */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2.5px solid var(--green);
+  outline-offset: 4px;
+}
+.btn:focus-visible {
+  outline-offset: 2px;
+}
+
+/* Page-wide left margin rule */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; bottom: 0;
+  left: calc(50% - min(var(--max), 100%) / 2 + var(--gap) - 2px);
+  width: 1.5px;
+  background: linear-gradient(to bottom, transparent 0, rgba(42,96,73,.25) 80px, rgba(42,96,73,.18) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* =============================================
+   LAYOUT HELPERS
+   ============================================= */
+.wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gap); }
+.band { padding-block: clamp(56px, 8vw, 120px); }
+.band-sm { padding-block: clamp(36px, 5vw, 72px); }
+
+/* =============================================
+   NAVIGATION
+   ============================================= */
+#nav {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background: rgba(245,246,244,.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 13px;
+}
+.brand { text-decoration: none; display: flex; flex-direction: column; line-height: 1; gap: 3px; }
+.brand-name {
+  font-family: var(--f-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.brand-name em { font-style: normal; color: var(--green); }
+.brand-tag {
+  font-family: var(--f-mono);
+  font-size: 8.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.nav-links a {
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--ink-mid);
+  text-decoration: none;
+  transition: color .18s;
+}
+.nav-links a:hover { color: var(--green); }
+.btn {
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  padding: 10px 18px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform .15s, background .18s;
+  border: 1.5px solid transparent;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.btn-primary:hover { background: var(--green); border-color: var(--green); transform: translateY(-1px); }
+#menu-toggle {
+  display: none;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  background: none;
+  border: 1.5px solid var(--rule);
+  padding: 8px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  color: var(--ink);
+}
+@media (max-width: 860px) {
+  .nav-links {
+    position: fixed;
+    inset: 56px 0 auto 0;
+    flex-direction: column;
+    align-items: flex-start;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    padding: 22px var(--gap) 28px;
+    gap: 18px;
+    transform: translateY(-110%);
+    transition: transform .28s ease;
+    z-index: 89;
+  }
+  .nav-links.open { transform: translateY(0); }
+  .nav-links a { font-size: 15px; }
+  #menu-toggle { display: block; }
+  .nav-links .btn { width: 100%; justify-content: center; }
+}
+
+/* =============================================
+   SUBPAGE HEADER
+   ============================================= */
+.sub-header {
+  padding-top: clamp(48px, 7vw, 90px);
+  padding-bottom: clamp(32px, 5vw, 64px);
+  background: var(--paper);
+}
+.sub-label {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sub-label::after {
+  content: '';
+  width: 60px;
+  height: 1px;
+  background: var(--rule);
+}
+.sub-hed {
+  font-family: var(--f-display);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  margin-bottom: 16px;
+}
+.sub-lede {
+  font-size: clamp(17px, 1.8vw, 20px);
+  color: var(--ink-mid);
+  max-width: 68ch;
+  line-height: 1.62;
+}
+
+/* =============================================
+   PROJECT SHOWCASE SECTION
+   ============================================= */
+.showcase-block {
+  background: var(--white);
+  border-block: 1px solid var(--rule);
+}
+.project-detail {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(40px, 6vw, 80px);
+  padding-block: clamp(48px, 8vw, 96px);
+  border-bottom: 1px solid var(--rule);
+}
+.project-detail:last-child {
+  border-bottom: none;
+}
+.project-info {
+  display: flex;
+  flex-direction: column;
+}
+.project-meta {
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 18px;
+  display: flex;
+  gap: 16px;
+}
+.project-student {
+  color: var(--ink-soft);
+}
+.project-title {
+  font-family: var(--f-display);
+  font-size: clamp(26px, 3.5vw, 42px);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+.diary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.diary-entry {
+  padding-left: 20px;
+  border-left: 2px solid var(--rule-blue);
+}
+.diary-entry h4 {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+.diary-entry p {
+  font-size: 16px;
+  color: var(--ink-mid);
+  line-height: 1.65;
+}
+.diary-entry p strong {
+  color: var(--ink);
+}
+
+/* Polaroid image styling in subpage */
+.project-visual {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+}
+.project-image-wrapper {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  padding: 14px 14px 28px;
+  box-shadow: 0 16px 36px rgba(26,46,68,.08), 0 4px 10px rgba(26,46,68,.04);
+  transform: rotate(-1.5deg);
+  transition: transform .3s ease, box-shadow .3s ease;
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+}
+.project-image-wrapper::before {
+  /* Tape left */
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: 20px;
+  width: 70px;
+  height: 22px;
+  background: rgba(245, 237, 218, 0.75);
+  transform: rotate(-12deg);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  border-left: 1px dashed rgba(184,131,42,0.2);
+  border-right: 1px dashed rgba(184,131,42,0.2);
+  pointer-events: none;
+}
+.project-image-wrapper::after {
+  /* Tape right */
+  content: '';
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  width: 70px;
+  height: 22px;
+  background: rgba(245, 237, 218, 0.75);
+  transform: rotate(10deg);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  border-left: 1px dashed rgba(184,131,42,0.2);
+  border-right: 1px dashed rgba(184,131,42,0.2);
+  pointer-events: none;
+}
+.project-image-wrapper:hover {
+  transform: rotate(0deg) scale(1.02);
+  box-shadow: 0 24px 45px rgba(26,46,68,.12), 0 8px 16px rgba(26,46,68,.06);
+}
+.project-image {
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(208,216,200,.5);
+}
+
+/* Placeholder Projects styling */
+.project-stub {
+  background: var(--paper);
+  border: 1px dashed var(--rule);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 280px;
+}
+.project-stub-icon {
+  font-family: var(--f-display);
+  font-size: 44px;
+  color: var(--green);
+  opacity: .35;
+  margin-bottom: 12px;
+}
+.project-stub h3 {
+  font-family: var(--f-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.project-stub p {
+  font-size: 15px;
+  color: var(--ink-soft);
+  max-width: 44ch;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .project-detail {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .project-visual {
+    order: -1;
+  }
+  .project-image-wrapper {
+    max-width: 380px;
+    margin-inline: auto;
+  }
+}
+
+/* =============================================
+   FOOTER (Matching kalos-academy.html)
+   ============================================= */
+footer {
+  background: var(--ink);
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-block: 40px;
+}
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.footer-brand .brand-name { font-size: 20px; color: var(--paper); }
+.footer-brand .brand-name em { color: var(--green); font-style: normal; }
+.footer-brand .brand-tag { color: rgba(214,234,225,.6); }
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+}
+.footer-nav a {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .05em;
+  color: rgba(214,234,225,.75);
+  text-decoration: none;
+  transition: color .18s;
+}
+.footer-nav a:hover { color: var(--green-light); }
+.footer-meta {
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  color: rgba(214,234,225,.75);
+  letter-spacing: .03em;
+  line-height: 1.9;
+  text-align: right;
+}
+@media (max-width: 640px) { .footer-meta { text-align: left; } }
+
+/* =============================================
+   SCROLL REVEAL
+   ============================================= */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .75s ease, transform .75s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="kalos-academy.html#hero" aria-label="Kalos Academy — home">
+      <span class="brand-name">K<em>a</em>los</span>
+      <span class="brand-tag">Academy · UK & US</span>
+    </a>
+    <nav class="nav-links" id="menu">
+      <a href="kalos-academy.html#workshop">The Workshop</a>
+      <a href="kalos-academy.html#teach">Subjects</a>
+      <a href="kalos-academy.html#beyond">Beyond the Exam</a>
+      <a href="kalos-academy.html#tutors">Our Tutors</a>
+      <a href="kalos-academy.html#letter">Our Thesis</a>
+      <a class="btn btn-primary" href="kalos-academy.html#contact">Book a conversation</a>
+    </nav>
+    <button id="menu-toggle" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
+</header>
+
+<main>
+  <!-- SUBPAGE HEADER -->
+  <section class="sub-header">
+    <div class="wrap">
+      <span class="sub-label">Exhibition Space</span>
+      <h1 class="sub-hed">The Student Workshop</h1>
+      <p class="sub-lede">
+        This is where we share projects that arose entirely from a student's own curiosity. 
+        There were no curricula dictating these topics, no worksheet prompts, and no grades assigned. 
+        Just an interesting question, and the space to trace it down.
+      </p>
+    </div>
+  </section>
+
+  <!-- SHOWCASE SECTION -->
+  <section class="showcase-block band-sm">
+    <div class="wrap">
+      
+      <!-- PROJECT 1: calendar -->
+      <article id="calendar" class="project-detail reveal">
+        <div class="project-info">
+          <div class="project-meta">
+            <span>Presentation</span>
+            <span class="project-student">Ananya · Year 6</span>
+          </div>
+          <h2 class="project-title">The thirteen-month calendar</h2>
+          
+          <div class="diary-section">
+            <div class="diary-entry">
+              <h4>What She Wondered</h4>
+              <p>
+                During an ordinary discussion about schedules, Ananya stopped and asked: 
+                <strong>"Why are there twelve months in a year — when thirteen equal ones would make so much more sense?"</strong> 
+                She challenged why we accept the complexity of uneven months (28, 30, and 31 days) 
+                when a simple, mathematically consistent alternative is staring us in the face.
+              </p>
+            </div>
+            
+            <div class="diary-entry">
+              <h4>What She Researched</h4>
+              <p>
+                Pursuing the question, she researched the astronomical basis of calendar structures. 
+                She investigated lunar cycles, mapping the difference between synodic and sidereal months. 
+                She tracked calendar history, discovering how political decisions in ancient Rome shaped 
+                our current system, and worked through the leap year calculations needed to align calendar days with the solar orbit.
+              </p>
+            </div>
+
+            <div class="diary-entry">
+              <h4>What She Discovered</h4>
+              <p>
+                Ananya mapped out the math: $13 \text{ months} \times 28 \text{ days} = 364 \text{ days}$. 
+                This left exactly one day left over in standard years (and two in leap years). 
+                She proposed designating this extra day as a global holiday called "Year Day" that sits 
+                outside of any week or month. She was delighted to discover that her independent proposal 
+                mirrored the historical <strong>International Fixed Calendar</strong> proposed in 1902.
+              </p>
+            </div>
+            
+            <div class="diary-entry">
+              <h4>How She Presented It</h4>
+              <p>
+                Entirely on her own initiative, she created a slide presentation detailing her calendar design. 
+                She stood in front of the class, presented the mathematical layout, and defended its structural trade-offs—such as the fact that 13 is a prime number and cannot be divided into quarters, and the consequence that every single month contains a Friday the 13th.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-visual">
+          <div class="project-image-wrapper">
+            <img src="landing%20page%20image%20Kalos%20website.png" alt="Notebook design showing the calculations and thoughts for the 13-month calendar" class="project-image" />
+          </div>
+        </div>
+      </article>
+
+      <!-- PROJECT 2: invented game -->
+      <article id="game" class="project-detail reveal reveal-delay-1">
+        <div class="project-info">
+          <div class="project-meta">
+            <span>In Progress</span>
+            <span class="project-student">Student · Year 6</span>
+          </div>
+          <h2 class="project-title">An invented game</h2>
+          
+          <div class="project-stub">
+            <div class="project-stub-icon">⬡</div>
+            <h3>Project Details Coming Soon</h3>
+            <p>
+              This student is currently detailing the game's rulebook, testing visual trade-offs, and balancing point values. 
+              The complete design log, mechanics breakdowns, and student diagrams will be hosted here shortly.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- PROJECT 3: Pascal's triangle -->
+      <article id="pascal" class="project-detail reveal reveal-delay-2">
+        <div class="project-info">
+          <div class="project-meta">
+            <span>Discovery</span>
+            <span class="project-student">Student · Year 5</span>
+          </div>
+          <h2 class="project-title">Patterns inside Pascal's triangle</h2>
+          
+          <div class="project-stub">
+            <div class="project-stub-icon">∑</div>
+            <h3>Project Details Coming Soon</h3>
+            <p>
+              Currently cataloging the fractal patterns found when shading multiples in Pascal's triangle. 
+              Interactive shading diagrams, student reflections on infinity, and number theory notes will be added to this space soon.
+            </p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="brand-name">K<em>a</em>los</span>
+      <span class="brand-tag" style="display:block;margin-top:4px;">Academy · UK &amp; US</span>
+    </div>
+    <nav class="footer-nav">
+      <a href="kalos-academy.html#workshop">The Workshop</a>
+      <a href="kalos-academy.html#teach">Subjects</a>
+      <a href="kalos-academy.html#beyond">Beyond the Exam</a>
+      <a href="kalos-academy.html#tutors">Our Tutors</a>
+      <a href="kalos-academy.html#letter">Our Thesis</a>
+      <a href="kalos-academy.html#contact">Contact</a>
+    </nav>
+    <div class="footer-meta">
+      hello@kalosacademy.com<br/>
+      UK &amp; United States · Online &amp; In-person<br/>
+      Student work shared with parental consent.
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Mobile menu ── */
+const toggle = document.getElementById('menu-toggle');
+const menu   = document.getElementById('menu');
+toggle.addEventListener('click', () => {
+  const open = menu.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', open);
+  toggle.textContent = open ? 'Close' : 'Menu';
+});
+menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  menu.classList.remove('open');
+  toggle.setAttribute('aria-expanded', false);
+  toggle.textContent = 'Menu';
+}));
+
+/* ── Scroll reveal ── */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.05 });
+revealEls.forEach(el => revealObs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<script>document.documentElement.className += ' js';</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Kalos Academy — Maths & Science Tuition · UK & US</title>
+<meta name="description" content="Kalos Academy teaches Maths, Biology, Chemistry and Physics to students in the UK and US — and grows curious, confident young people along the way."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* =============================================
+   TOKENS
+   ============================================= */
+:root {
+  --paper:       #F5F6F4;
+  --paper-dark:  #ECEEE9;
+  --ink:         #1A2E44;
+  --ink-mid:     #3D5166;
+  --ink-soft:    #6B7D8F;
+  --green:       #2A6049;
+  --green-light: #D6EAE1;
+  --amber:       #B8832A;
+  --amber-light: #F5EDDA;
+  --rule:        #D0D8C8;
+  --rule-blue:   #C8D4DC;
+  --white:       #FFFFFF;
+
+  --f-display: 'Playfair Display', Georgia, serif;
+  --f-body:    'Libre Baskerville', Georgia, serif;
+  --f-hand:    'Caveat', cursive;
+  --f-mono:    'Space Mono', ui-monospace, monospace;
+
+  --max: 1160px;
+  --gap: clamp(18px, 4.5vw, 64px);
+  --tab-w: 44px;
+}
+
+/* =============================================
+   RESET & BASE
+   ============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 18px;
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  /* Notebook ruled lines across the whole page */
+  background-image:
+    linear-gradient(transparent calc(2.4rem - 1px), var(--rule) calc(2.4rem - 1px), var(--rule) 2.4rem, transparent 2.4rem);
+  background-size: 100% 2.4rem;
+  background-attachment: local;
+  overflow-x: hidden;
+}
+::selection { background: var(--amber-light); color: var(--ink); }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+figure { margin: 0; }
+
+/* Keyboard Accessibility Focus Styles */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2.5px solid var(--green);
+  outline-offset: 4px;
+}
+.btn:focus-visible,
+.tab:focus-visible {
+  outline-offset: 2px;
+}
+
+/* =============================================
+   LAYOUT HELPERS
+   ============================================= */
+.wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gap); }
+.band { padding-block: clamp(56px, 8vw, 120px); }
+.band-sm { padding-block: clamp(36px, 5vw, 72px); }
+
+/* Page-wide left margin rule (aligned to the text block responsive margins) */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; bottom: 0;
+  left: calc(50% - min(var(--max), 100%) / 2 + var(--gap) - 2px);
+  width: 1.5px;
+  background: linear-gradient(to bottom, transparent 0, rgba(42,96,73,.25) 80px, rgba(42,96,73,.18) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* =============================================
+   INDEX TABS (right edge, sticky)
+   ============================================= */
+#tab-rail {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper-dark);
+  border: 1px solid var(--rule);
+  border-right: none;
+  padding: 10px 6px;
+  cursor: pointer;
+  transition: background .2s, color .2s, padding-right .2s;
+  text-decoration: none;
+  border-radius: 3px 0 0 3px;
+  white-space: nowrap;
+  min-height: 52px;
+  width: var(--tab-w);
+}
+.tab:hover, .tab.active {
+  background: var(--green);
+  color: var(--white);
+  border-color: var(--green);
+  padding-right: 10px;
+}
+@media (max-width: 1280px) { #tab-rail { display: none; } }
+
+/* =============================================
+   NAVIGATION
+   ============================================= */
+#nav {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background: rgba(245,246,244,.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 13px;
+}
+.brand { text-decoration: none; display: flex; flex-direction: column; line-height: 1; gap: 3px; }
+.brand-name {
+  font-family: var(--f-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.brand-name em { font-style: normal; color: var(--green); }
+.brand-tag {
+  font-family: var(--f-mono);
+  font-size: 8.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.nav-links a {
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--ink-mid); /* Darker mid-ink for higher WCAG AA contrast */
+  text-decoration: none;
+  transition: color .18s;
+}
+.nav-links a:hover { color: var(--green); }
+.btn {
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  padding: 10px 18px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform .15s, background .18s;
+  border: 1.5px solid transparent;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.btn-primary:hover { background: var(--green); border-color: var(--green); transform: translateY(-1px); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn-ghost:hover { border-color: var(--green); color: var(--green); }
+#menu-toggle {
+  display: none;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  background: none;
+  border: 1.5px solid var(--rule);
+  padding: 8px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  color: var(--ink);
+}
+@media (max-width: 860px) {
+  .nav-links {
+    position: fixed;
+    inset: 56px 0 auto 0;
+    flex-direction: column;
+    align-items: flex-start;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    padding: 22px var(--gap) 28px;
+    gap: 18px;
+    transform: translateY(-110%);
+    transition: transform .28s ease;
+    z-index: 89;
+  }
+  .nav-links.open { transform: translateY(0); }
+  .nav-links a { font-size: 15px; }
+  #menu-toggle { display: block; }
+  .nav-links .btn { width: 100%; justify-content: center; }
+}
+
+/* =============================================
+   HERO
+   ============================================= */
+#hero {
+  padding-top: clamp(52px, 9vw, 110px);
+  padding-bottom: clamp(48px, 8vw, 100px);
+  position: relative;
+  background: var(--paper);
+}
+.hero-kicker {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--green);
+}
+.hero-question {
+  font-family: var(--f-hand);
+  font-weight: 600;
+  font-size: clamp(42px, 7.2vw, 88px);
+  line-height: 1.0;
+  color: var(--ink);
+  max-width: 16ch;
+  margin-bottom: .3em;
+  position: relative;
+}
+/* Pencil underline drawn under the key phrase */
+.hero-question .underline {
+  position: relative;
+  display: inline;
+}
+.hero-question .underline::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -4px;
+  height: 3px;
+  background: var(--amber);
+  border-radius: 2px;
+  opacity: .7;
+}
+.hero-attr {
+  font-family: var(--f-mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  letter-spacing: .02em;
+  line-height: 1.7;
+  max-width: 58ch;
+  margin-bottom: 32px;
+  padding-left: 20px;
+  border-left: 2px solid var(--rule-blue);
+}
+.hero-thesis {
+  grid-column: 1 / -1; /* Spans full layout width across columns */
+  font-size: clamp(18px, 2vw, 21px);
+  color: var(--ink-mid);
+  max-width: 88ch; /* Increased line length to fill the space cleanly */
+  line-height: 1.62;
+  margin-top: 40px; /* Vertical gap below heading block and image */
+  margin-bottom: 24px;
+}
+.hero-thesis strong { color: var(--ink); font-weight: 700; }
+.hero-cta {
+  grid-column: 1 / -1; /* Spans full layout width across columns */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* Two-column responsive hero container */
+.hero-container {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 0 clamp(32px, 5vw, 64px);
+  align-items: start; /* Align elements to the top */
+}
+.hero-header-block {
+  display: flex;
+  flex-direction: column;
+}
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  margin-top: 50px; /* Offset downward to align with the first lines of the heading */
+}
+/* Polaroid/sketch paper wrapper with visual tape effect */
+.hero-image-wrapper {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  padding: 14px 14px 28px; /* Thicker classic polaroid padding */
+  box-shadow: 0 16px 36px rgba(26,46,68,.08), 0 4px 10px rgba(26,46,68,.04);
+  transform: rotate(2deg); /* Slightly stronger rotation for style */
+  transition: transform .35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow .35s ease;
+  position: relative;
+  max-width: 480px; /* Increased from 420px */
+  width: 100%;
+}
+.hero-image-wrapper::before {
+  /* Tape left */
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: 20px;
+  width: 75px;
+  height: 22px;
+  background: rgba(245, 237, 218, 0.75);
+  transform: rotate(-15deg);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  border-left: 1px dashed rgba(184,131,42,0.2);
+  border-right: 1px dashed rgba(184,131,42,0.2);
+  pointer-events: none;
+}
+.hero-image-wrapper::after {
+  /* Tape right */
+  content: '';
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  width: 75px;
+  height: 22px;
+  background: rgba(245, 237, 218, 0.75);
+  transform: rotate(12deg);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  border-left: 1px dashed rgba(184,131,42,0.2);
+  border-right: 1px dashed rgba(184,131,42,0.2);
+  pointer-events: none;
+}
+.hero-image-wrapper:hover {
+  transform: rotate(-0.5deg) scale(1.03);
+  box-shadow: 0 24px 45px rgba(26,46,68,.12), 0 8px 16px rgba(26,46,68,.06);
+}
+.hero-image {
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(208,216,200,.6);
+  display: block;
+}
+@media (max-width: 960px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+  }
+  .hero-visual {
+    order: -1; /* Placed visual on top of text for better mobile presentation */
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+  .hero-image-wrapper {
+    max-width: 420px;
+    margin-inline: auto;
+  }
+  .hero-thesis {
+    grid-column: auto;
+    max-width: 100%;
+    margin-top: 24px;
+    margin-bottom: 20px;
+  }
+  .hero-cta {
+    grid-column: auto;
+  }
+}
+
+/* Name meaning — subtle strip below hero */
+.name-strip {
+  background: var(--amber-light);
+  border-block: 1px solid rgba(184,131,42,.25);
+  padding-block: 18px;
+}
+.name-strip p {
+  font-family: var(--f-body);
+  font-style: italic;
+  font-size: 15.5px;
+  color: var(--ink-mid);
+  max-width: 80ch;
+  line-height: 1.65;
+}
+.name-strip p strong { font-style: normal; color: var(--amber); font-weight: 700; }
+
+/* =============================================
+   SECTION LABELS
+   ============================================= */
+.section-label {
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+  max-width: 80px;
+}
+.section-hed {
+  font-family: var(--f-display);
+  font-size: clamp(28px, 4.2vw, 48px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -.015em;
+  margin-bottom: 18px;
+}
+.section-lede {
+  font-size: clamp(17px, 1.8vw, 20px);
+  color: var(--ink-mid);
+  max-width: 60ch;
+  line-height: 1.62;
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+
+/* =============================================
+   WORKSHOP — pinned index cards
+   ============================================= */
+#workshop { background: var(--white); border-block: 1px solid var(--rule); }
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(286px, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+.card {
+  text-decoration: none;
+  display: block;
+  color: inherit;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 28px 26px 32px;
+  position: relative;
+  box-shadow: 2px 5px 0 rgba(26,46,68,.06), 0 1px 0 rgba(26,46,68,.04);
+  transition: transform .35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow .35s ease;
+}
+.card::before {
+  /* Pin */
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px; height: 16px;
+  background: var(--green);
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,.25);
+}
+.card:nth-child(2) { transform: rotate(-.8deg); margin-top: 16px; }
+.card:nth-child(3) { transform: rotate(.5deg); }
+.card:hover { transform: translateY(-5px) rotate(0); box-shadow: 4px 12px 0 rgba(26,46,68,.09); }
+.card-type {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-who { color: var(--ink-soft); }
+.card h3 {
+  font-family: var(--f-display);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+.card p { font-size: 15.5px; color: var(--ink-mid); line-height: 1.6; }
+
+/* =============================================
+   QUESTIONS WALL — torn paper strips
+   ============================================= */
+#questions {
+  background: var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+/* Faint ruled lines on dark background */
+#questions::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(transparent calc(2.4rem - 1px), rgba(255,255,255,.05) calc(2.4rem - 1px), rgba(255,255,255,.05) 2.4rem, transparent 2.4rem);
+  background-size: 100% 2.4rem;
+  pointer-events: none;
+}
+#questions .section-label { color: rgba(214,234,225,.7); }
+#questions .section-label::after { background: rgba(255,255,255,.1); }
+#questions .section-hed { color: var(--paper); }
+#questions .section-lede { color: rgba(214,234,225,.8); margin-bottom: 44px; }
+.q-strips { display: flex; flex-direction: column; gap: 0; }
+.q-strip {
+  background: var(--paper);
+  padding: 18px 28px 18px 24px;
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  /* torn top edge via SVG filter approximation using border */
+  margin-bottom: 10px;
+  border-radius: 1px;
+  transform: rotate(0);
+  transition: transform .2s;
+}
+.q-strip:nth-child(even) { transform: rotate(-.15deg); margin-left: 8px; background: #FFFEF5; }
+.q-strip:nth-child(3n) { transform: rotate(.2deg); margin-right: 12px; }
+.q-strip:hover { transform: scale(1.01) rotate(0); z-index: 2; }
+/* Torn edge */
+.q-strip::before {
+  content: '';
+  position: absolute;
+  top: -6px; left: 0; right: 0;
+  height: 7px;
+  background: inherit;
+  clip-path: polygon(0% 100%, 1% 30%, 2% 80%, 3.5% 20%, 5% 70%, 6.5% 10%, 8% 60%, 9.5% 0%, 11% 50%, 12.5% 85%, 14% 25%, 16% 75%, 18% 15%, 20% 65%, 22% 30%, 24% 80%, 26% 10%, 28% 55%, 30% 90%, 32% 20%, 34% 70%, 36% 35%, 38% 85%, 40% 15%, 42% 60%, 44% 0%, 46% 50%, 48% 80%, 50% 20%, 52% 70%, 54% 40%, 56% 90%, 58% 5%, 60% 55%, 62% 85%, 64% 25%, 66% 65%, 68% 10%, 70% 60%, 72% 30%, 74% 80%, 76% 20%, 78% 70%, 80% 45%, 82% 95%, 84% 15%, 86% 65%, 88% 35%, 90% 75%, 92% 5%, 94% 50%, 96% 85%, 98% 25%, 100% 70%, 100% 100%);
+}
+.q-text {
+  font-family: var(--f-hand);
+  font-size: clamp(20px, 2.4vw, 27px);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+  flex: 1;
+}
+.q-by {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* =============================================
+   WHAT WE TEACH — subject tiles
+   ============================================= */
+#teach { background: var(--paper); }
+.subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  margin-bottom: 48px;
+}
+@media (max-width: 640px) { .subjects-grid { grid-template-columns: 1fr; } }
+.subject {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: background .2s;
+}
+.subject::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px;
+  width: 0;
+  background: var(--green);
+  transition: width .35s ease;
+}
+.subject:hover { background: var(--paper); }
+.subject:hover::after { width: 100%; }
+.subject-glyph {
+  font-family: var(--f-hand);
+  font-size: 52px;
+  line-height: 1;
+  color: var(--green);
+  opacity: .22;
+  position: absolute;
+  top: 16px; right: 20px;
+  pointer-events: none;
+}
+.subject h3 {
+  font-family: var(--f-display);
+  font-size: 21px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+.subject p { font-size: 15.5px; color: var(--ink-mid); line-height: 1.62; }
+.exam-note {
+  background: var(--green-light);
+  border: 1px solid rgba(42,96,73,.2);
+  border-left: 3px solid var(--green);
+  padding: 20px 24px;
+  font-size: 15.5px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  border-radius: 0 2px 2px 0;
+}
+.exam-note strong { color: var(--green); font-weight: 700; }
+
+/* =============================================
+   MANIFESTO — "Things we'll never do"
+   ============================================= */
+#manifesto {
+  background: var(--ink);
+  position: relative;
+}
+#manifesto .section-label { color: rgba(214,234,225,.7); }
+#manifesto .section-label::after { background: rgba(255,255,255,.1); }
+#manifesto .section-hed { color: var(--paper); max-width: 22ch; margin-bottom: 48px; }
+.manifesto-list { display: flex; flex-direction: column; gap: 0; }
+.manifesto-item {
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding: 22px 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.manifesto-item:last-child { border-bottom: 1px solid rgba(255,255,255,.1); }
+.manifesto-never {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.2);
+  padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.manifesto-text {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: clamp(17px, 2vw, 21px);
+  color: var(--paper);
+  line-height: 1.35;
+}
+.manifesto-closer {
+  margin-top: 44px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  font-family: var(--f-hand);
+  font-size: clamp(22px, 3vw, 30px);
+  color: rgba(214,234,225,.85);
+  line-height: 1.35;
+  max-width: 52ch;
+}
+
+/* =============================================
+   BEYOND THE EXAM — life skills
+   ============================================= */
+#beyond { background: var(--paper-dark); }
+.beyond-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px 36px;
+}
+.skill-item { border-top: 2px solid var(--ink); padding-top: 18px; }
+.skill-num {
+  font-family: var(--f-hand);
+  font-size: 36px;
+  color: var(--green);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.skill-item h3 {
+  font-family: var(--f-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.skill-item p { font-size: 15.5px; color: var(--ink-mid); line-height: 1.58; }
+.beyond-footer {
+  margin-top: 52px;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: clamp(19px, 2.4vw, 26px);
+  color: var(--ink);
+  line-height: 1.42;
+  max-width: 48ch;
+  padding-top: 36px;
+  border-top: 1px solid var(--rule);
+}
+
+/* =============================================
+   TUTORS
+   ============================================= */
+#tutors { background: var(--white); border-block: 1px solid var(--rule); }
+.tutors-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  margin-bottom: 52px;
+  align-items: start;
+}
+@media (max-width: 760px) { .tutors-top { grid-template-columns: 1fr; gap: 32px; } }
+.tutors-philosophy p {
+  font-size: 17.5px;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  margin-bottom: 1em;
+}
+.tutors-philosophy p:last-child { margin-bottom: 0; }
+.tutor-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 32px;
+  position: relative;
+}
+/* Notebook spiral binding top */
+.tutor-card::before {
+  content: '· · · · · · · · · · · ·';
+  display: block;
+  font-size: 22px;
+  color: var(--rule);
+  letter-spacing: 6px;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+.tutor-role {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 14px;
+}
+.tutor-card h3 {
+  font-family: var(--f-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 14px;
+  line-height: 1.2;
+}
+.tutor-card p { font-size: 15.5px; color: var(--ink-mid); line-height: 1.65; }
+.one-question {
+  background: var(--amber-light);
+  border: 1px solid rgba(184,131,42,.2);
+  padding: 24px 28px;
+  margin-top: 32px;
+}
+.one-question .oq-label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 10px;
+}
+.one-question p {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+/* =============================================
+   FOUNDER'S LETTER
+   ============================================= */
+#letter {
+  background: var(--paper);
+  position: relative;
+}
+.letter-sheet {
+  max-width: 720px;
+  margin-inline: auto;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  box-shadow: 3px 8px 0 rgba(26,46,68,.07);
+  /* padding-top and padding-bottom set to multiples of 2.55rem line height grid */
+  padding: 5.1rem clamp(36px, 6vw, 72px) 5.1rem 56px;
+  position: relative;
+  /* Ruled lines on the letter itself */
+  background-image: linear-gradient(transparent calc(2.55rem - 1px), rgba(200,212,220,.45) calc(2.55rem - 1px), rgba(200,212,220,.45) 2.55rem, transparent 2.55rem);
+  background-size: 100% 2.55rem;
+}
+/* Letter's own margin rule */
+.letter-sheet::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 56px;
+  border-left: 1.5px solid rgba(42,96,73,.2);
+}
+.letter-inner { padding-left: 24px; } /* Ensures text starts at exactly 80px, maintaining a constant 24px gap from the margin line */
+.letter-label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--green);
+  line-height: 1.275rem; /* Exactly 0.5 of grid height */
+  margin-bottom: 1.275rem; /* Exactly 0.5 of grid height. Total occupied: 2.55rem (1 line) */
+  display: block;
+}
+.letter-hed {
+  font-family: var(--f-display);
+  font-size: 32px; /* Fixed font size inside the letter block to guarantee grid locking */
+  font-weight: 600;
+  line-height: 2.55rem; /* Exactly 1 grid line */
+  color: var(--ink);
+  margin-bottom: 2.55rem; /* Exactly 1 grid line. Total occupied: 5.1rem (2 lines) */
+}
+.letter-body p {
+  font-size: 17.5px;
+  line-height: 2.55rem; /* Matches the background line-height exactly */
+  color: var(--ink-mid);
+  margin-bottom: 2.55rem; /* Keeps paragraph gaps snapped to the notebook lines */
+}
+.letter-avatar {
+  width: 3.825rem;
+  height: 3.825rem;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-top: 2.55rem;
+  margin-bottom: 0;
+  border: 2px solid var(--rule-blue);
+  box-shadow: 0 4px 12px rgba(26,46,68,.08);
+}
+.letter-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.letter-sign {
+  font-family: var(--f-hand);
+  font-size: 48px;
+  color: var(--ink);
+  line-height: 2.55rem; /* Snapped to grid line */
+  margin-top: 1.275rem;
+}
+.letter-role {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  letter-spacing: .06em;
+  line-height: 1.275rem;
+  margin-top: 1.275rem;
+}
+
+/* =============================================
+   PARENT VOICES
+   ============================================= */
+#voices { background: var(--paper-dark); }
+.voices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+}
+blockquote {
+  padding: 0;
+  border: none;
+  display: flex;
+  flex-direction: column;
+}
+.quote-mark {
+  font-family: var(--f-display);
+  font-size: 72px;
+  line-height: .7;
+  color: var(--green);
+  opacity: .25;
+  margin-bottom: 4px;
+}
+blockquote p {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 18.5px;
+  color: var(--ink);
+  line-height: 1.52;
+  margin-bottom: 16px;
+  flex: 1;
+}
+.quote-source {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--ink-soft);
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+
+/* =============================================
+   EMOTIONAL CLOSER
+   ============================================= */
+#closer {
+  background: var(--paper);
+  text-align: center;
+  padding-block: clamp(64px, 10vw, 130px);
+  position: relative;
+}
+.closer-q {
+  font-family: var(--f-hand);
+  font-size: clamp(32px, 5.5vw, 64px);
+  font-weight: 600;
+  color: var(--ink);
+  max-width: 18ch;
+  margin-inline: auto;
+  line-height: 1.1;
+  margin-bottom: 22px;
+}
+.closer-sub {
+  font-size: clamp(16px, 1.8vw, 19px);
+  color: var(--ink-mid);
+  max-width: 48ch;
+  margin-inline: auto;
+  line-height: 1.65;
+}
+
+/* =============================================
+   CONTACT
+   ============================================= */
+#contact { background: var(--ink); }
+#contact .section-label { color: rgba(214,234,225,.7); }
+#contact .section-label::after { background: rgba(255,255,255,.1); }
+#contact .section-hed { color: var(--paper); }
+#contact .section-lede { color: rgba(214,234,225,.8); }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 700px;
+}
+@media (max-width: 640px) { .contact-grid { grid-template-columns: 1fr; } }
+.contact-grid .full { grid-column: 1 / -1; }
+.field label {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(214,234,225,.6);
+  margin-bottom: 7px;
+}
+.field input, .field select, .field textarea {
+  width: 100%;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 2px;
+  color: var(--paper);
+  font-family: var(--f-body);
+  font-size: 16.5px;
+  padding: 12px 14px;
+  transition: border-color .18s, background .18s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--green);
+  background: rgba(255,255,255,.1);
+}
+.field textarea { min-height: 100px; resize: vertical; }
+.field select option { color: var(--ink); background: var(--paper); }
+.submit-btn {
+  font-family: var(--f-mono);
+  font-size: 13px;
+  letter-spacing: .06em;
+  background: var(--paper);
+  color: var(--ink);
+  border: none;
+  padding: 15px 28px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+  width: 100%;
+}
+.submit-btn:hover { background: var(--green); color: var(--white); transform: translateY(-1px); }
+.contact-note {
+  margin-top: 14px;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  color: rgba(214,234,225,.75); /* Increased contrast to pass WCAG AA standards */
+  letter-spacing: .02em;
+  line-height: 1.7;
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+footer {
+  background: var(--ink);
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-block: 40px;
+}
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.footer-brand .brand-name { font-size: 20px; color: var(--paper); }
+.footer-brand .brand-name em { color: var(--green); font-style: normal; }
+.footer-brand .brand-tag { color: rgba(214,234,225,.6); } /* Increased contrast */
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+}
+.footer-nav a {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .05em;
+  color: rgba(214,234,225,.75); /* Increased default link contrast to 5.5:1 ratio */
+  text-decoration: none;
+  transition: color .18s;
+}
+.footer-nav a:hover { color: var(--green-light); } /* Soft high-contrast light green hover on dark background */
+.footer-meta {
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  color: rgba(214,234,225,.75); /* Increased metadata contrast to 5.5:1 ratio */
+  letter-spacing: .03em;
+  line-height: 1.9;
+  text-align: right;
+}
+@media (max-width: 640px) { .footer-meta { text-align: left; } }
+
+/* =============================================
+   SCROLL REVEAL
+   ============================================= */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .75s ease, transform .75s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- INDEX TABS -->
+<nav id="tab-rail" aria-label="Section navigation">
+  <a class="tab" href="#hero">Home</a>
+  <a class="tab" href="#workshop">Workshop</a>
+  <a class="tab" href="#questions">Questions</a>
+  <a class="tab" href="#teach">Subjects</a>
+  <a class="tab" href="#manifesto">Manifesto</a>
+  <a class="tab" href="#beyond">Beyond</a>
+  <a class="tab" href="#tutors">Tutors</a>
+  <a class="tab" href="#letter">Letter</a>
+  <a class="tab" href="#contact">Contact</a>
+</nav>
+
+<!-- NAV -->
+<header id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#hero" aria-label="Kalos Academy — home">
+      <span class="brand-name">K<em>a</em>los</span>
+      <span class="brand-tag">Academy · UK & US</span>
+    </a>
+    <nav class="nav-links" id="menu">
+      <a href="#workshop">The Workshop</a>
+      <a href="#teach">Subjects</a>
+      <a href="#beyond">Beyond the Exam</a>
+      <a href="#tutors">Our Tutors</a>
+      <a href="#letter">Our Thesis</a>
+      <a class="btn btn-primary" href="#contact">Book a conversation</a>
+    </nav>
+    <button id="menu-toggle" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ① HERO -->
+  <section id="hero" class="band" data-tab="hero">
+    <div class="wrap hero-container">
+      <div class="hero-header-block">
+        <p class="hero-kicker">A question one of our students asked — entirely on her own</p>
+        <h1 class="hero-question reveal">
+          Why are there <span class="underline">twelve months</span> in a year — when thirteen equal ones would make so much more sense?
+        </h1>
+        <p class="hero-attr reveal reveal-delay-1">
+          — Ananya, Year 6.
+        </p>
+      </div>
+      <div class="hero-visual reveal reveal-delay-2">
+        <div class="hero-image-wrapper">
+          <img src="landing%20page%20image%20Kalos%20website.png" alt="Ananya's hand-drawn thirteen-month lunar calendar design" class="hero-image" />
+        </div>
+      </div>
+      <p class="hero-thesis reveal reveal-delay-2">
+        At Kalos, we teach <strong>Maths, Biology, Chemistry and Physics</strong> to students across the
+        UK and the United States. We prepare children for the <strong>11+</strong> and help older
+        students excel at <strong>GCSE</strong>. But the result is never the whole point. What we really
+        protect is the instinct that made Ananya ask that question — and grow young people
+        who think clearly, speak well, and carry themselves with confidence long after the exam is over.
+      </p>
+      <div class="hero-cta reveal reveal-delay-3">
+        <a class="btn btn-primary" href="#contact">Book a free conversation</a>
+        <a class="btn btn-ghost" href="#workshop">See what our students made →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAME MEANING -->
+  <div class="name-strip">
+    <div class="wrap">
+      <p><strong>Kalos</strong> — from the ancient Greek καλός — meant something more than beautiful. The Greeks used it for a person who was both excellent and good: capable in the world, and genuinely formed as a human being. That is the only kind of education we believe in.</p>
+    </div>
+  </div>
+
+  <!-- ② WORKSHOP -->
+  <section id="workshop" class="band" data-tab="workshop">
+    <div class="wrap">
+      <p class="section-label reveal">The Workshop</p>
+      <h2 class="section-hed reveal">What our students make when nobody's marking it</h2>
+      <p class="section-lede reveal">None of this was homework. No one was graded. A student wondered something — or decided to build something — and we gave them the room to chase it. This is the part of Kalos that never fits on a report card.</p>
+      <div class="cards-grid">
+        <a href="workshop.html#calendar" class="card reveal">
+          <div class="card-type">
+            <span>Presentation</span>
+            <span class="card-who">Ananya · Year 6</span>
+          </div>
+          <h3>The thirteen-month calendar</h3>
+          <p>She challenged why the year is divided into twelve uneven months, researched lunar cycles and the Roman calendar, designed a cleaner thirteen-month alternative — then stood up, presented it, and defended its flaws to the class.</p>
+        </a>
+        <a href="workshop.html#game" class="card reveal reveal-delay-1">
+          <div class="card-type">
+            <span>In progress</span>
+            <span class="card-who">Year 6</span>
+          </div>
+          <h3>An invented game</h3>
+          <p>He is designing a brand-new game from scratch, borrowing the best mechanics from the sports and games he loves, balancing the rules until it is both fair and genuinely fun. Systems thinking and trade-offs — by another name.</p>
+        </a>
+        <a href="workshop.html#pascal" class="card reveal reveal-delay-2">
+          <div class="card-type">
+            <span>Discovery</span>
+            <span class="card-who">Year 5</span>
+          </div>
+          <h3>Patterns inside Pascal's triangle</h3>
+          <p>Set loose with colours and a printed triangle, a student began shading multiples of three — and gasped when a fractal quietly appeared. From a colouring game to a real conversation about infinity and hidden number structures.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ QUESTIONS WALL -->
+  <section id="questions" class="band" data-tab="questions">
+    <div class="wrap">
+      <p class="section-label reveal">The Questions Wall</p>
+      <h2 class="section-hed reveal">A living record of what our students wonder</h2>
+      <p class="section-lede reveal">We keep every good question. These are a few from recent weeks — written exactly as they were asked.</p>
+      <div class="q-strips reveal">
+        <div class="q-strip">
+          <span class="q-text">Why are there twelve months, and not thirteen with equal days?</span>
+          <span class="q-by">Ananya · Year 6</span>
+        </div>
+        <div class="q-strip">
+          <span class="q-text">If zero is nothing, how can it also be a number?</span>
+        </div>
+        <div class="q-strip">
+          <span class="q-text">Who decided what does and doesn't count as a word?</span>
+        </div>
+        <div class="q-strip">
+          <span class="q-text">Why is the sky blue and not violet, if violet light scatters more?</span>
+        </div>
+        <div class="q-strip">
+          <span class="q-text">If I keep halving a number, do I ever truly reach zero?</span>
+        </div>
+        <div class="q-strip">
+          <span class="q-text">Could the world ever run out of new songs to write?</span>
+        </div>
+        <div class="q-strip">
+          <span class="q-text">Why do we feel time move faster as we get older?</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ WHAT WE TEACH -->
+  <section id="teach" class="band" data-tab="teach">
+    <div class="wrap">
+      <p class="section-label reveal">What we teach</p>
+      <h2 class="section-hed reveal">The subjects. Taught properly.</h2>
+      <p class="section-lede reveal">We focus on Maths and the Sciences — the subjects where a great teacher makes the biggest difference, and where real understanding is worth far more than a memorised method.</p>
+      <div class="subjects-grid reveal">
+        <div class="subject">
+          <span class="subject-glyph" aria-hidden="true">∑</span>
+          <h3>Mathematics</h3>
+          <p>From number sense and problem-solving in the primary years to algebra, calculus and everything beyond. We teach the reasoning, not just the steps — so that when the question changes shape, the understanding holds.</p>
+        </div>
+        <div class="subject">
+          <span class="subject-glyph" aria-hidden="true">⬡</span>
+          <h3>Biology</h3>
+          <p>The science of living things, taught with the curiosity it deserves. From cells and genetics to ecosystems and human biology — and the questions that science is still working to answer.</p>
+        </div>
+        <div class="subject">
+          <span class="subject-glyph" aria-hidden="true">⚗</span>
+          <h3>Chemistry</h3>
+          <p>Atoms, reactions, energy, and the invisible architecture of everything. We make the abstract tangible — and the equations make sense when you understand what they are actually describing.</p>
+        </div>
+        <div class="subject">
+          <span class="subject-glyph" aria-hidden="true">∿</span>
+          <h3>Physics</h3>
+          <p>Forces, waves, electricity, space — the subject that sits underneath everything else. We teach Physics as a way of seeing the world, not as a list of formulae to survive until the exam.</p>
+        </div>
+      </div>
+      <div class="exam-note reveal">
+        <strong>For UK families:</strong> we have strong experience preparing students for the <strong>11+</strong> and helping older students excel at <strong>GCSE</strong>. These are not separate programmes — they are the natural outcome of learning the subject well.
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ MANIFESTO -->
+  <section id="manifesto" class="band" data-tab="manifesto">
+    <div class="wrap">
+      <p class="section-label reveal">A short manifesto</p>
+      <h2 class="section-hed reveal">Things we'll never do</h2>
+      <div class="manifesto-list reveal">
+        <div class="manifesto-item">
+          <span class="manifesto-never">Never</span>
+          <span class="manifesto-text">Drill your child to pass a test they don't understand.</span>
+        </div>
+        <div class="manifesto-item">
+          <span class="manifesto-never">Never</span>
+          <span class="manifesto-text">Sell fear. Plenty of tutoring businesses do. It works, and we won't do it.</span>
+        </div>
+        <div class="manifesto-item">
+          <span class="manifesto-never">Never</span>
+          <span class="manifesto-text">Bury a nine-year-old under worksheets until the curiosity drains out of them.</span>
+        </div>
+        <div class="manifesto-item">
+          <span class="manifesto-never">Never</span>
+          <span class="manifesto-text">Rank students against each other as a motivational tactic.</span>
+        </div>
+        <div class="manifesto-item">
+          <span class="manifesto-never">Never</span>
+          <span class="manifesto-text">Package the life-skills sessions as an upsell. They are included. Full stop.</span>
+        </div>
+      </div>
+      <p class="manifesto-closer reveal">We'd rather grow a thinker slowly than manufacture a result quickly.</p>
+    </div>
+  </section>
+
+  <!-- ⑥ BEYOND THE EXAM -->
+  <section id="beyond" class="band" data-tab="beyond">
+    <div class="wrap">
+      <p class="section-label reveal">Beyond the Exam · Included</p>
+      <h2 class="section-hed reveal">The lessons school forgets to teach</h2>
+      <p class="section-lede reveal">Schools teach the subjects. Almost no one teaches a child to negotiate, to disagree well, to say how they feel clearly, or to lead a room. We do — woven into every place at Kalos, never sold separately.</p>
+      <div class="beyond-grid">
+        <div class="skill-item reveal">
+          <div class="skill-num">i</div>
+          <h3>Negotiation &amp; conflict</h3>
+          <p>Monthly sessions that mix year groups for real, practised negotiations, debates and structured disagreements. Children learn to listen, hold a position, and find the deal — a skill used every week, taught nowhere on the curriculum.</p>
+        </div>
+        <div class="skill-item reveal reveal-delay-1">
+          <div class="skill-num">ii</div>
+          <h3>Communicating clearly</h3>
+          <p>Saying what you mean, and naming how you feel, calmly and well — to a teacher, a sibling, a room. We practise this. Presentation, persuasion, and the quiet confidence of being genuinely understood.</p>
+        </div>
+        <div class="skill-item reveal reveal-delay-2">
+          <div class="skill-num">iii</div>
+          <h3>Initiative &amp; ownership</h3>
+          <p>Ananya's calendar presentation and the invented game are the examples. Taking an idea you care about and seeing it through. We celebrate the students who start things, not only those who finish the worksheet first.</p>
+        </div>
+        <div class="skill-item reveal reveal-delay-3">
+          <div class="skill-num">iv</div>
+          <h3>Growing as a person</h3>
+          <p>Curiosity, resilience, good habits — reading widely, writing regularly, playing sport seriously. The practices that outlast any exam and quietly make the academic results easier to reach.</p>
+        </div>
+      </div>
+      <p class="beyond-footer reveal">Included with every place at Kalos, at a low cost. We never package these as separate courses — this is simply what a Kalos education is.</p>
+    </div>
+  </section>
+
+  <!-- ⑦ OUR TUTORS -->
+  <section id="tutors" class="band" data-tab="tutors">
+    <div class="wrap">
+      <p class="section-label reveal">Our tutors</p>
+      <h2 class="section-hed reveal">We don't hire tutors.<br>We hire people worth looking up to.</h2>
+      <div class="tutors-top">
+        <div class="tutors-philosophy reveal">
+          <p>Every tutor at Kalos is what we'd call an overachiever in the real sense — not someone who collected grades, but someone who has built a genuinely interesting life. They are deep experts in their subjects, and they are also athletes, readers, builders, and people with strong convictions about the world. They have done hard things outside a classroom.</p>
+          <p>Subject knowledge can be verified on a CV. Inspiration cannot. A student needs someone in the room who makes them feel — not because they said so, but because they have lived it — that being curious and working hard leads somewhere real.</p>
+          <p>When we consider a new tutor for Kalos, we ask one question above everything else: <em>would a twelve-year-old find this person genuinely fascinating?</em> If the answer isn't a clear yes, they are not right for us — however strong the rest of their application.</p>
+          <p>Every Kalos tutor brings the full academy philosophy into their sessions. They notice the child in front of them. They are interested in what that child reads, plays, builds, and wonders about. The holistic side of Kalos is not a separate programme — it lives in every lesson, every week.</p>
+        </div>
+        <div class="reveal reveal-delay-1">
+          <div class="tutor-card">
+            <p class="tutor-role">Founder &amp; Lead Tutor</p>
+            <h3>An MBA, a competitive basketball player, and someone who reads everything.</h3>
+            <p>Our founder holds an MBA from IIM Calcutta — one of Asia's most demanding business schools. He is a competitive basketball player, reads compulsively across subjects, and writes every day. He has coached students not only in Maths and Science but in the habits that quietly change a young person's trajectory: building a reading practice, playing sport seriously, writing regularly, taking a genuine interest in things beyond the syllabus.</p>
+            <p style="margin-top:14px;">He started Kalos because he kept meeting bright children who had been prepared to pass an exam and never prepared to think. He wanted to build the academy he wished had existed.</p>
+          </div>
+          <div class="one-question">
+            <p class="oq-label">The question we ask every candidate</p>
+            <p>Would a twelve-year-old find this person genuinely fascinating? If not, they're not right for us — however strong the CV.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑧ FOUNDER'S LETTER -->
+  <section id="letter" class="band" data-tab="letter">
+    <div class="wrap">
+      <div class="letter-sheet reveal">
+        <div class="letter-inner">
+          <span class="letter-label">A letter from our founder</span>
+          <h2 class="letter-hed">Why I built Kalos</h2>
+          <div class="letter-body">
+            <p>I'll be honest about where this started.</p>
+            <p>I kept meeting clever children who had been trained to pass and not trained to think. They could produce the method and freeze the moment a question changed shape. The spark — the thing that makes a student ask why we have twelve months and not thirteen — had been quietly, systematically pressed out of them. That bothered me deeply.</p>
+            <p>I am, by background, a competitive basketball player and an MBA from IIM Calcutta. I read across subjects constantly — history, philosophy, biology, whatever I can find. I write every day, even badly. None of that appears on a teaching qualification, and all of it, I think, is why my students learn. Not because I am impressive to them, but because I am visibly still curious in front of them. A student who sees their teacher genuinely enjoying a hard question is quietly being given permission to not yet know everything.</p>
+            <p>The conversations we have at Kalos are not always about the syllabus. We talk about books, about what it teaches you to lose badly on a basketball court and come back to training the next morning, about writing one paragraph a day until it becomes a habit, about what a student cares about outside the lesson. We take that seriously — because it matters.</p>
+            <p>I notice when something shifts. When a student who barely spoke in September is arguing a position confidently in January. When a child who dreaded Maths is explaining it to a classmate. That is the part of this work that makes me want to come back the next day.</p>
+            <p>Kalos exists because I believe the exam result is the easy part. The hard, important, permanent work is the person sitting it.</p>
+          </div>
+          <div class="letter-avatar">
+            <img src="Profile photo.jpeg" alt="Karan K K">
+          </div>
+          <div class="letter-sign">— Karan K K</div>
+          <p class="letter-role">Founder, Kalos Academy</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑨ PARENT VOICES -->
+  <section id="voices" class="band" data-tab="voices">
+    <div class="wrap">
+      <p class="section-label reveal">From parents</p>
+      <h2 class="section-hed reveal">What families tell us</h2>
+      <div class="voices-grid">
+        <blockquote class="reveal">
+          <div class="quote-mark" aria-hidden="true">"</div>
+          <p>She passed the 11+, which we're thrilled about — but the real change is that she now comes home excited to tell us what she learned. That's worth more than the result.</p>
+          <footer class="quote-source">Parent of a Year 5 pupil · UK</footer>
+        </blockquote>
+        <blockquote class="reveal reveal-delay-1">
+          <div class="quote-mark" aria-hidden="true">"</div>
+          <p>His GCSE Maths went from a 4 to a 7. They didn't just cram him — they got him to actually understand it, finally.</p>
+          <footer class="quote-source">Parent of a Year 11 pupil · UK</footer>
+        </blockquote>
+        <blockquote class="reveal reveal-delay-2">
+          <div class="quote-mark" aria-hidden="true">"</div>
+          <p>The debates and life-skills sessions did something I didn't expect. My son argues with us far more reasonably now — and actually listens.</p>
+          <footer class="quote-source">Parent of a Year 9 pupil · UK</footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑩ EMOTIONAL CLOSER -->
+  <section id="closer" class="band">
+    <div class="wrap">
+      <p class="closer-q reveal">When did your child last ask you a question you couldn't answer?</p>
+      <p class="closer-sub reveal reveal-delay-1">That instinct is the most valuable thing they own. We exist to protect it — and to build everything else around it.</p>
+    </div>
+  </section>
+
+  <!-- ⑪ CONTACT -->
+  <section id="contact" class="band" data-tab="contact">
+    <div class="wrap">
+      <p class="section-label reveal">Start here</p>
+      <h2 class="section-hed reveal">Let's talk about your child</h2>
+      <p class="section-lede reveal">Tell us where they are, what they find difficult, and what they love. We'll arrange a free, no-pressure conversation — no commitment, just a chance to see if we're the right fit.</p>
+      <form id="contact-form" class="contact-grid reveal">
+        <div class="field"><label for="f-name">Your name</label><input id="f-name" type="text" placeholder="e.g. Priya Sharma" autocomplete="name" required /></div>
+        <div class="field"><label for="f-email">Email address</label><input id="f-email" type="email" placeholder="you@example.com" autocomplete="email" required /></div>
+        <div class="field"><label for="f-year">Child's year group</label>
+          <select id="f-year" required>
+            <option value="">Select year group…</option>
+            <optgroup label="UK">
+              <option>Year 3</option><option>Year 4</option><option>Year 5</option>
+              <option>Year 6</option><option>Year 7</option><option>Year 8</option>
+              <option>Year 9</option><option>Year 10</option><option>Year 11</option>
+            </optgroup>
+            <optgroup label="US">
+              <option>Grade 4</option><option>Grade 5</option><option>Grade 6</option>
+              <option>Grade 7</option><option>Grade 8</option><option>Grade 9</option>
+              <option>Grade 10</option><option>Grade 11</option><option>Grade 12</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field"><label for="f-subject">Subject of interest</label>
+          <select id="f-subject" required>
+            <option value="">Select…</option>
+            <option>Mathematics</option>
+            <option>Biology</option>
+            <option>Chemistry</option>
+            <option>Physics</option>
+            <option>11+ preparation</option>
+            <option>Multiple subjects</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+        <div class="field full"><label for="f-msg">Anything you'd like us to know</label><textarea id="f-msg" placeholder="A line or two about your child — what they enjoy, what they find hard, what you're hoping for…"></textarea></div>
+        <div class="full"><button class="submit-btn" id="send-btn" type="submit">Send &amp; book a free conversation →</button></div>
+        <p class="contact-note full">This opens your email app addressed to us — no data is stored on this page. Connect to your preferred form service before going live.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="brand-name">K<em>a</em>los</span>
+      <span class="brand-tag" style="display:block;margin-top:4px;">Academy · UK &amp; US</span>
+    </div>
+    <nav class="footer-nav">
+      <a href="#workshop">The Workshop</a>
+      <a href="#teach">Subjects</a>
+      <a href="#manifesto">Manifesto</a>
+      <a href="#beyond">Beyond the Exam</a>
+      <a href="#tutors">Our Tutors</a>
+      <a href="#letter">Our Thesis</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="footer-meta">
+      hello@kalosacademy.com<br/>
+      UK &amp; United States · Online &amp; In-person<br/>
+      Student work shared with parental consent.
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Mobile menu ── */
+const toggle = document.getElementById('menu-toggle');
+const menu   = document.getElementById('menu');
+toggle.addEventListener('click', () => {
+  const open = menu.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', open);
+  toggle.textContent = open ? 'Close' : 'Menu';
+});
+menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  menu.classList.remove('open');
+  toggle.setAttribute('aria-expanded', false);
+  toggle.textContent = 'Menu';
+}));
+
+/* ── Scroll reveal ── */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* ── Active tab highlighting ── */
+const sections = document.querySelectorAll('[data-tab]');
+const tabs     = document.querySelectorAll('.tab');
+const tabObs   = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.dataset.tab;
+      tabs.forEach(t => t.classList.toggle('active', t.getAttribute('href') === '#' + id));
+    }
+  });
+}, { rootMargin: '-40% 0px -40% 0px' });
+sections.forEach(s => tabObs.observe(s));
+
+/* ── Contact form → mailto ── */
+document.getElementById('contact-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const nameEl    = document.getElementById('f-name');
+  const emailEl   = document.getElementById('f-email');
+  const yearEl    = document.getElementById('f-year');
+  const subjectEl = document.getElementById('f-subject');
+  const msgEl     = document.getElementById('f-msg');
+  
+  const name    = nameEl.value.trim();
+  const email   = emailEl.value.trim();
+  const year    = yearEl.value;
+  const subject = subjectEl.value;
+  const msg     = msgEl.value.trim();
+  
+  if (!name || !email || !year || !subject) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert('Please enter a valid email address.');
+    emailEl.focus();
+    return;
+  }
+  
+  const body = [
+    'Name: ' + name,
+    'Email: ' + email,
+    'Year group: ' + year,
+    'Subject: ' + subject,
+    '',
+    msg
+  ].join('\n');
+  
+  window.location.href =
+    'mailto:hello@kalosacademy.com'
+    + '?subject=' + encodeURIComponent('Enquiry from ' + name + ' (' + year + ')')
+    + '&body='    + encodeURIComponent(body);
+});
+</script>
+</body>
+</html>
